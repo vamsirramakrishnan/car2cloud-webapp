@@ -95,7 +95,7 @@
     <Content Include="App_Data\RadCaptcha\X.wav" />
     <Content Include="App_Data\RadCaptcha\Y.wav" />
     <Content Include="App_Data\RadCaptcha\Z.wav" />
-    <Content Include="dlls\WebChart.dll" />
+    <Content Include="bin\WebChart.dll" />
     <Content Include="Images\background.gif" />
     <Content Include="Images\contentBottom.png" />
     <Content Include="Images\contentMiddle.png" />
