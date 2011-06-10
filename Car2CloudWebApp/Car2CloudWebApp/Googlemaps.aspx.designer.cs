@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Car2CloudWebApp {
+namespace ictlab {
     
     
     public partial class Googlemaps {

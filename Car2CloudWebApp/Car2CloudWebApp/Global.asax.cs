@@ -30,7 +30,7 @@ namespace ictlab
 
         void Session_Start(object sender, EventArgs e)
         {
-            Session["Toegang"] = "";
+            Session["Toegang"] = "jjj";
             CheckLogin();
         }
 
