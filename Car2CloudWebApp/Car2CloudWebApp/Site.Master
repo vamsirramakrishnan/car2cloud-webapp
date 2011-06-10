@@ -1,0 +1,35 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ictlab.SiteMaster" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+    <title></title>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+<form id="Form1" runat="server">
+<telerik:RadScriptManager ID="RadScriptManager1" runat="server"></telerik:RadScriptManager>
+    <div id="page">
+        <div id="header">
+            <a href="Default.aspx"><img border="0" src="Images/Logo.png" alt="Car2Cloud Logo" /></a>
+            <ul class="menu">
+                <li><asp:ContentPlaceHolder ID="LoginContent" runat="server" /></li>
+                <!--<li><a href="About.aspx" title="Over ons">Over ons</a></li>-->
+            </ul>
+        </div>
+        <div id="main">
+            <div id="main_top"></div>
+            <div id="main_middle"><asp:ContentPlaceHolder ID="MainContent" runat="server"/></div>
+            <div id="main_bottom"></div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div id="footer">
+    </div>
+    </form>
+    
+</body>
+</html>
