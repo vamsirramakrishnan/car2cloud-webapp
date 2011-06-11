@@ -54,6 +54,13 @@ namespace WebApplication1
             string[] latitudes = GetLatitudes(dataSet, 1, 1);
             string[] longitudes = GetLongitudes(dataSet, 1, 1);
 
+            /* GoogleMaps */
+            // Met behulp van de datatable 2 gebruiken om het javascript te maken
+            DataTable data = GetDataTableFromJson(jsonResponse);
+            String[] Latitude = GetLatitudes(data, 1, 1);
+            String[] Longitude = GetLongitudes(data, 1, 1);
+            js.Text = BuildScript(Latitude, Longitude);
+
 
         }
 
@@ -216,7 +223,7 @@ namespace WebApplication1
             ChartControl1.YAxisFont.ForeColor = Color.SteelBlue;
             ChartControl1.XAxisFont.ForeColor = Color.SteelBlue;
 
-            ChartControl1.ChartTitle.Text = "Gebruiker 1 - Trips";
+            ChartControl1.ChartTitle.Text = "";
             ChartControl1.ChartTitle.ForeColor = Color.Black;
         }
 
@@ -257,6 +264,66 @@ namespace WebApplication1
 
             return chart;
         }
+
+        private static String BuildScript(String[] Latitude, String[] Longitude)
+        {
+            try
+            {
+                String Locations = "";
+                String jScript = "";
+                for (int i = 0; i < Latitude.Length; )
+                {
+                    // JavaScript maken voor de overlay             
+                    Locations += Environment.NewLine + @"
+                    path.push(new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"));
+
+                    var marker" + i.ToString() + @" = new google.maps.Marker({
+                        position: new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"),
+                        title: '#' + path.getLength(),
+                        map: map
+                    });";
+                    i++;
+                }
+
+                // Het complete JavaScript maken
+                jScript = @"<script type='text/javascript'>
+
+                                var poly;
+                                var map;
+
+                                function initialize() {
+                                    var latlng = new google.maps.LatLng(51.844552160000006, 4.630125760999988);
+                                    var myOptions = {
+                                        zoom: 12,
+                                        center: latlng,
+                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                    };
+
+                                    map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+
+                                    var polyOptions = {
+                                        strokeColor: 'blue',
+                                        strokeOpacity: 0.5,
+                                        strokeWeight: 3
+                                    }
+                                    poly = new google.maps.Polyline(polyOptions);
+                                    poly.setMap(map);
+
+                                    var path = poly.getPath();
+
+                                    " + Locations + @"
+                                }
+                    </script>";
+                return jScript;
+
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         /* 
          * Latitudes uit de dataSet halen en in array terug geven.
