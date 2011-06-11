@@ -41,18 +41,18 @@
             <asp:Label ID="Label3" runat="server" Text="11-06-2011"></asp:Label>
             <br /><br />
             <asp:Label ID="Label4" runat="server" Width="100px" Text="Gem. snelheid:"></asp:Label>
-            <asp:Label ID="Label5" runat="server" Text="61 km/uur"></asp:Label>
+            <asp:Label ID="Label5" runat="server" Text="leeg"></asp:Label>
             <br />
             <asp:Label ID="Label6" runat="server" Width="100px" Text="Top snelheid:"></asp:Label>
-            <asp:Label ID="Label7" runat="server" Text="122 km/uur"></asp:Label>
+            <asp:Label ID="Label7" runat="server" Text="leeg"></asp:Label>
             <br /><br /><br />
             <asp:Label ID="Label8" runat="server" Width="180px" Text="Algemeen" Font-Bold="True"></asp:Label>
             <br /><br />
             <asp:Label ID="Label9" runat="server" Width="100px" Text="Gem. snelheid:"></asp:Label>
-            <asp:Label ID="Label10" runat="server" Text="67 km/uur"></asp:Label>
+            <asp:Label ID="Label10" runat="server" Text="leeg"></asp:Label>
             <br />
             <asp:Label ID="Label11" runat="server" Width="100px" Text="Top snelheid:"></asp:Label>
-            <asp:Label ID="Label12" runat="server" Text="118 km/uur"></asp:Label>
+            <asp:Label ID="Label12" runat="server" Text="leeg"></asp:Label>
         </p>
     </div>
     <div id="dataViewRight">
