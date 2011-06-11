@@ -27,5 +27,5 @@
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-<div id="map_canvas"></div>
+    <div id="map_canvas"></div>
 </asp:Content>

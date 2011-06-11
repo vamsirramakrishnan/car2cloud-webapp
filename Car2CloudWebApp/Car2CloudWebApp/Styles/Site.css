@@ -1,10 +1,12 @@
 ﻿/* DEFAULTS
 ----------------------------------------------------------*/
 
-body   
+BODY   
 {
     background-image:url('../images/background.gif');
     font-size: 12px;
+    background-repeat: repeat-x;
+    background-color: #aee5ff;
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
 }
 
@@ -184,6 +186,52 @@ width: 398px;
     
 }
 
+#dataViewLeft
+{
+    float: left;
+    margin-left: 40px;
+    margin-top: 26px;
+    width: 200px;
+    height: 265px;
+    border: 1px outset #000000;
+}
+
+#dataViewLeftTwo
+{
+    float: left;
+    margin-left: 25px;
+    margin-top: 26px;
+    width: 200px;
+    height: 265px;
+    border: 1px outset #000000;
+}
+
+#dataViewRight
+{
+    float: left;
+    margin-left: 15px;   
+}
+
+#dataViewCenter
+{
+    float: left;
+    margin-left: 40px;
+    margin-top: 10px;
+    width: 833px;
+    border: 1px outset #000000;
+}
+
+.padding
+{
+    margin: 10px;
+}
+
+.paddingTwo
+{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 /*Buttons*/
 
 .inlogButton
@@ -197,8 +245,6 @@ width: 398px;
 /*Google Maps*/
 #map_canvas
 {
-  height: 500px;
-  width: 700px;
-  margin: 0px;
-  padding: 0px;
+  height: 400px;
+  width: 833px;
 }
