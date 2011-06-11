@@ -25,6 +25,7 @@ namespace WebApplication1
         protected override void OnInit(EventArgs e)
         {
 
+            /* dataSet ophalen uit de app engine */
             string formattedUri = "http://3.cars2cloud.appspot.com/cardata/GetAll";
             HttpWebRequest webRequest = GetWebRequest(formattedUri);
 
@@ -35,36 +36,35 @@ namespace WebApplication1
                 jsonResponse = sr.ReadToEnd();
             }
 
-            /* Gemiddelde snelheid */
+           
+            /* dataSet ophalen */
             DataTable dataSet = GetDataTableFromJson(jsonResponse);
-            int averageSpeed = GetAverageSpeed(dataSet, 1, 1);
-            int averageSpeedAll = GetAverageSpeed(dataSet, 1, 0);
+
+            /*ListBox vullen */
+            fillListBox(dataSet);
+
+            /* implementatie van ListBox, krijg een userId en tripId */
+            int userId = 1;
+            int tripId = 1;
+
+            /* Gemiddelde snelheid */
+            int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
+            Label5.Text = averageSpeed + " km/uur";
+            int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
+            Label10.Text = averageSpeedAll + " km/uur";
 
             /* linechart */
-            LineChart one = newLine(dataSet, "Trip nummer 1", Color.Red, 2, 1, 1);
-            //LineChart two = newLine(dataSet, "Trip nummer 2", Color.Blue, 2, 1, 2);
-
+            LineChart one = newLine(dataSet, "Trip nummer 1", Color.Red, 2, userId, tripId);
             ConfigureColors();
-
             ChartControl1.Charts.Add(one);
-            //ChartControl1.Charts.Add(two);
             ChartControl1.RedrawChart();
 
-            /* longitudes en latitudes ontvangen */
-            string[] latitudes = GetLatitudes(dataSet, 1, 1);
-            string[] longitudes = GetLongitudes(dataSet, 1, 1);
-
             /* GoogleMaps */
-            // Met behulp van de datatable 2 gebruiken om het javascript te maken
-            DataTable data = GetDataTableFromJson(jsonResponse);
-            String[] Latitude = GetLatitudes(data, 1, 1);
-            String[] Longitude = GetLongitudes(data, 1, 1);
+            String[] Latitude = GetLatitudes(dataSet, userId, tripId);
+            String[] Longitude = GetLongitudes(dataSet, userId, tripId);
             js.Text = BuildScript(Latitude, Longitude);
 
-
         }
-
-
 
         private static HttpWebRequest GetWebRequest(string formattedUri)
         {
@@ -134,6 +134,15 @@ namespace WebApplication1
             return cardata;
         }
 
+        /* 
+         * ListBox vullen met alle trips van de gebruiker
+         */
+        private void fillListBox(DataTable dataSet)
+        {
+
+
+        }
+
         /**
          * Berekent de gemiddelde snelheid.
          * tripId op 0 geeft gemiddelde snelheid van alle trips.
@@ -176,6 +185,7 @@ namespace WebApplication1
                     averageSpeed = (averageTrip / count);
                 }
             }
+
             /* Van alle trips wordt de gemiddelde snelheid gemeten */
             else if (tripId == 0)
             {
@@ -265,6 +275,10 @@ namespace WebApplication1
             return chart;
         }
 
+        /*
+         * GoogleMaps implementatie
+         * @author: Joel
+         */
         private static String BuildScript(String[] Latitude, String[] Longitude)
         {
             try
