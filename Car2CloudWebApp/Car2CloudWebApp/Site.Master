@@ -21,7 +21,7 @@
         </div>
         <div id="main">
             <div id="main_top"></div>
-            <div id="main_middle"><asp:ContentPlaceHolder ID="MainContent" runat="server"/></div>
+            <div id="main_middle"><asp:ContentPlaceHolder ID="MainContent" runat="server"/><div style="clear:both;"></div></div>
             <div id="main_bottom"></div>
         </div>
         <div class="clear">
