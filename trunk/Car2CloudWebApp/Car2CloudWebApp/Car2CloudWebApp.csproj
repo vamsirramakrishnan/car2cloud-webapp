@@ -126,7 +126,7 @@
     <Content Include="Uitloggen.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Googlemaps.aspx" />
-    <Content Include="NewUser.aspx" />  </ItemGroup>
+    <Content Include="NewUser.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">
@@ -180,7 +180,11 @@
     <Compile Include="Googlemaps.aspx.designer.cs">
       <DependentUpon>Googlemaps.aspx</DependentUpon>
     </Compile>
-    <Compile Include="NewUser.aspx.cs">      <DependentUpon>NewUser.aspx</DependentUpon>      <SubType>ASPXCodeBehind</SubType>    </Compile>    <Compile Include="NewUser.aspx.designer.cs">      <DependentUpon>NewUser.aspx</DependentUpon>    </Compile>  </ItemGroup>
+    <Compile Include="NewUser.aspx.cs">
+      <DependentUpon>NewUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
