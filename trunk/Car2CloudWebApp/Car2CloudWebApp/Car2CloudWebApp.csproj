@@ -126,6 +126,7 @@
     <Content Include="Uitloggen.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Googlemaps.aspx" />
+    <Content Include="NewUser.aspx" />  </ItemGroup>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">
@@ -179,7 +180,7 @@
     <Compile Include="Googlemaps.aspx.designer.cs">
       <DependentUpon>Googlemaps.aspx</DependentUpon>
     </Compile>
-  </ItemGroup>
+    <Compile Include="NewUser.aspx.cs">      <DependentUpon>NewUser.aspx</DependentUpon>      <SubType>ASPXCodeBehind</SubType>    </Compile>    <Compile Include="NewUser.aspx.designer.cs">      <DependentUpon>NewUser.aspx</DependentUpon>    </Compile>  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -216,7 +217,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties UseJQuerySupport="True" UseAjaxifiedTemplates="True" />
+      <UserProperties UseAjaxifiedTemplates="True" UseJQuerySupport="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
