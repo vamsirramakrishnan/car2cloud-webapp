@@ -438,9 +438,27 @@ namespace ictlab
         protected void Button1_Click(object sender, EventArgs e)
         {
 
-            int selectedIndex = ListBox1.SelectedIndex;
+            int selectedIndex = Convert.ToInt32(ListBox1.SelectedValue);
+            int tripId = selectedIndex;
 
-            
+            ChartControl1.Charts.Clear();
+
+            /* Gemiddelde snelheid */
+            int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
+            Label5.Text = averageSpeed + " km/uur";
+            int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
+            Label10.Text = averageSpeedAll + " km/uur";
+
+            /* linechart */
+            LineChart one = newLine(dataSet, "Trip nummer 1", Color.Red, 2, userId, tripId);
+            ConfigureColors();
+            ChartControl1.Charts.Add(one);
+            ChartControl1.RedrawChart();
+
+            /* GoogleMaps */
+            String[] Latitude = GetLatitudes(dataSet, userId, tripId);
+            String[] Longitude = GetLongitudes(dataSet, userId, tripId);
+            js.Text = BuildScript(Latitude, Longitude);
         }
     }
 }
