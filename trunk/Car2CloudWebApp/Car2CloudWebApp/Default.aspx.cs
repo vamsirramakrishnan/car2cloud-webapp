@@ -51,8 +51,9 @@ namespace ictlab
             Label10.Text = averageSpeedAll + " km/uur";
 
             /* linechart */
-            LineChart one = newLine(dataSet, "Trip nummer 1", Color.Red, 2, userId, tripId);
+            LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
             ConfigureColors();
+            one.ShowLineMarkers = false;
             ChartControl1.Charts.Add(one);
             ChartControl1.RedrawChart();
 
@@ -450,8 +451,9 @@ namespace ictlab
             Label10.Text = averageSpeedAll + " km/uur";
 
             /* linechart */
-            LineChart one = newLine(dataSet, "Trip nummer 1", Color.Red, 2, userId, tripId);
+            LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
             ConfigureColors();
+            one.ShowLineMarkers = false;
             ChartControl1.Charts.Add(one);
             ChartControl1.RedrawChart();
 

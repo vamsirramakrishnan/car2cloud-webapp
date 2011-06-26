@@ -184,6 +184,9 @@
       <DependentUpon>NewUser.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="NewUser.aspx.designer.cs">
+      <DependentUpon>NewUser.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
