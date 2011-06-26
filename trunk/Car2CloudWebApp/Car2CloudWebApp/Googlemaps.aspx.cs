@@ -39,25 +39,52 @@ namespace ictlab
             try
             {
                 String Locations = "";
+                String Beginpunt = "";
+                String Eindpunt = "";
                 String jScript = "";
-                for (int i = 0; i < Latitude.Length; )
+
+                // Beginpunt weergeven en JavaScript maken voor de overlay
+                String gomvormen1 = "http://maps.google.com/maps/geo?q=" + Latitude[0] + ", " + Longitude[0] + "";
+                HttpWebRequest grequest1 = GetWebRequest(gomvormen1);
+                HttpWebResponse gresponse1 = (HttpWebResponse)grequest1.GetResponse();
+                string gjsonResponse1 = string.Empty;
+                using (StreamReader gsr1 = new StreamReader(gresponse1.GetResponseStream()))
+                {
+                    gjsonResponse1 = gsr1.ReadToEnd();
+                }
+
+                Beginpunt += Environment.NewLine + @"
+                    path.push(new google.maps.LatLng(" + Latitude[0] + ", " + Longitude[0] + @"));
+                    
+                    var marker0 = new google.maps.Marker({
+                        position: new google.maps.LatLng(" + Latitude[0] + ", " + Longitude[0] + @"),
+                        title: 'Beginpunt:'"+ gjsonResponse1->Placemark[0]->address + @",
+                        map: map
+                    });";
+
+                // Eindpunt weergeven
+                Eindpunt += Environment.NewLine + @"
+                    path.push(new google.maps.LatLng(" + Latitude[Latitude.Length -1] + ", " + Longitude[Longitude.Length -1] + @"));
+                    
+                    var markereinde = new google.maps.Marker({
+                        position: new google.maps.LatLng(" + Latitude[Latitude.Length -1] + ", " + Longitude[Longitude.Length -1] + @"),
+                        title: 'Eindpunt: ' + path.getPosition(),
+                        map: map
+                    });";
+
+                // De lijnen tussen begin en eindpunt maken
+                for (int i = 1; i < (Latitude.Length - 1); )
                 {
                     // JavaScript maken voor de overlay             
                     Locations += Environment.NewLine + @"
-                    path.push(new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"));
-
-                    var marker" + i.ToString() + @" = new google.maps.Marker({
-                        position: new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"),
-                        title: '#' + path.getLength(),
-                        map: map
-                    });";
+                    path.push(new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"));";
                     i++;
                 }
 
                 // Het complete JavaScript maken
                 jScript = @"<script type='text/javascript'>
 
-                                var poly;
+                                var route;
                                 var map;
 
                                 function initialize() {
@@ -69,18 +96,20 @@ namespace ictlab
                                     };
 
                                     map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-
+                               
                                     var polyOptions = {
-                                        strokeColor: 'blue',
-                                        strokeOpacity: 0.5,
-                                        strokeWeight: 3
+                                        strokeColor: '#FF0000',
+                                        strokeOpacity: 1.0,
+                                        strokeWeight: 5,
+                                        numLevel: 3
                                     }
-                                    poly = new google.maps.Polyline(polyOptions);
-                                    poly.setMap(map);
 
-                                    var path = poly.getPath();
-
-                                    " + Locations + @"
+                                    route = new google.maps.Polyline(polyOptions);
+                                    route.setMap(map);
+                                    var path = route.getPath();
+                                    
+                                    " + Beginpunt + Locations + Eindpunt + @"
+                                    
                                 }
                     </script>";
                 return jScript;
