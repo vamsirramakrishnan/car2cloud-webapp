@@ -52,13 +52,14 @@ namespace ictlab
                 {
                     gjsonResponse1 = gsr1.ReadToEnd();
                 }
+                //String adres1 = gjsonResponse1.Contains("address");
 
                 Beginpunt += Environment.NewLine + @"
                     path.push(new google.maps.LatLng(" + Latitude[0] + ", " + Longitude[0] + @"));
                     
                     var marker0 = new google.maps.Marker({
                         position: new google.maps.LatLng(" + Latitude[0] + ", " + Longitude[0] + @"),
-                        title: 'Beginpunt:'"+ gjsonResponse1->Placemark[0]->address + @",
+                        title: 'Beginpunt: ',
                         map: map
                     });";
 
@@ -68,7 +69,7 @@ namespace ictlab
                     
                     var markereinde = new google.maps.Marker({
                         position: new google.maps.LatLng(" + Latitude[Latitude.Length -1] + ", " + Longitude[Longitude.Length -1] + @"),
-                        title: 'Eindpunt: ' + path.getPosition(),
+                        title: 'Eindpunt: ',
                         map: map
                     });";
 
