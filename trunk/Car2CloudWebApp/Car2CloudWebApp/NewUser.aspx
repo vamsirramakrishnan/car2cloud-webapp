@@ -20,8 +20,8 @@
         <td>Gebruikersniveau</td>
         <td>
             <asp:DropDownList ID="ddlRoleID" runat="server">
-                <asp:ListItem Text="Normale Gebruiker" Selected="True" Value="2" /> 
-                <asp:ListItem Text="Administrator" Value="1" />
+                <asp:ListItem Text="Mederwerker" Selected="True" Value="2" /> 
+                <asp:ListItem Text="Manager" Value="1" />
             </asp:DropDownList>
         </td>
     </tr>
