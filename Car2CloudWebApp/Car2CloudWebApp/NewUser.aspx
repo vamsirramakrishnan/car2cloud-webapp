@@ -5,7 +5,8 @@
     <a href="Uitloggen.aspx">Uitloggen</a>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
-<table runat="server">
+    <asp:Literal id="lit" runat="server" />
+<table id="tableNewUser" runat="server">
     <tr>
         <td>Voornaam</td><td><asp:TextBox ID="tbFirstName" runat="server" /></td>
     </tr>

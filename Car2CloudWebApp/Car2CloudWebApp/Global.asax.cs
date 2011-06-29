@@ -30,7 +30,10 @@ namespace ictlab
 
         void Session_Start(object sender, EventArgs e)
         {
-            Session["Toegang"] = "";
+            Session["userid"] = "";
+            Session["roleid"] = "";
+            Session["companyid"] = "";
+            Session["entityid"] = "";
             CheckLogin();
         }
 
@@ -56,7 +59,7 @@ namespace ictlab
 
             string Url = Request.RawUrl;
             string Urlcontrole = Url.Substring(1);
-            string SessieData = Session["Toegang"].ToString();
+            string SessieData = Session["userid"].ToString();
 
             int index = Url.IndexOf("Inloggen.aspx");
 

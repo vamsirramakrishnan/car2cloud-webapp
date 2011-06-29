@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="Site.Master" AutoEventWireup="true" CodeBehind="Inloggen.aspx.cs" Inherits="ictlab.Inloggen" %>
+﻿<%@ Page Title="Inloggen" Language="C#" MasterPageFile="Site.Master" AutoEventWireup="true" CodeBehind="Inloggen.aspx.cs" Inherits="ictlab.Inloggen" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="LoginContent" runat="server">
