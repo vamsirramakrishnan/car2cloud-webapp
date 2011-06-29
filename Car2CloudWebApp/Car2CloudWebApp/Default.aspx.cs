@@ -22,7 +22,6 @@ namespace ictlab
 
         protected override void OnInit(EventArgs e)
         {
-
             Session["layer"] = "leeg";
 
             if (Session["roleid"].ToString() == "1" && Session["layer"] == "leeg") 
@@ -31,7 +30,18 @@ namespace ictlab
                 Session["layer"] = "manager";
 
                 /* Medewerkers weergeven */
+                string uri = "http://cars2cloud.appspot.com/cardata/GetUserByCompany?companyid=" + Session["companyid"];
 
+                HttpWebRequest webRequest = GetWebRequest(uri);
+
+                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+                string jsonResponse = string.Empty;
+                using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                {
+                    jsonResponse = sr.ReadToEnd();
+                }
+
+                DataTable dtCompanyUsers = GetDatableAllCompanysUser(jsonResponse);
             }
             else if (Session["roleid"].ToString() == "1" && Session["layer"] == "medewerker")
             {
@@ -133,6 +143,66 @@ namespace ictlab
 
             // Return the HttpWebRequest.
             return (HttpWebRequest)System.Net.WebRequest.Create(serviceUri);
+        }
+
+        private DataTable GetDatableAllCompanysUser(string Json) {
+            DataTable dtCompanyUsers = new DataTable();
+            String cleanjson = Json.Replace("[", "").Replace("]", "").Replace("\",\"",":").Replace("\"","");
+            String[] Rows = cleanjson.Split(':');
+            String[] tempRows = new String[Rows.Length];
+            int rowLength = Rows.Length;
+
+            if (Rows.Length > 0)
+            {
+                for (int i = 0; i < Rows.Length; i++)
+                {
+                    if (Rows[i].StartsWith(","))
+                    {
+                        tempRows[i] = Rows[i].TrimStart(',');
+                    }
+                    else
+                    {
+                        if (Rows[i].Equals(""))
+                        {
+                            rowLength--;
+                        }
+                        tempRows[i] = Rows[i];
+                    }
+                }
+                Rows = new String[rowLength];
+
+                for (int i = 0; i < rowLength; i++)
+                {
+                    Rows[i] = tempRows[i];
+                }
+            }
+
+            //add datacolumns
+
+            DataColumn dc = new DataColumn("UserID");
+            dtCompanyUsers.Columns.Add(dc);
+            dc = new DataColumn("EntityID");
+            dtCompanyUsers.Columns.Add(dc);
+            dc = new DataColumn("Firstname");
+            dtCompanyUsers.Columns.Add(dc);
+            dc = new DataColumn("Lastname");
+            dtCompanyUsers.Columns.Add(dc);
+
+            //Insert Rows Datatable
+
+            for (int rowIndex = 0; rowIndex < Rows.Length; rowIndex++)
+            {
+                DataRow dr = dtCompanyUsers.NewRow();
+                int Count = 0;
+                foreach (String value in Rows[rowIndex].Split(','))
+                {
+                    dr[Count] = (value.Split(','));
+                    Count++;
+                }
+                dtCompanyUsers.Rows.Add(dr);
+            }
+
+            return dtCompanyUsers;
         }
 
         private DataTable GetDataTableFromJson(String Json)
