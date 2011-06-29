@@ -35,7 +35,11 @@ namespace ictlab
 
             if (jsonResponse != "")
             {
-                Session["Toegang"] = jsonResponse;//Response is USER ID
+                string[] login = jsonResponse.Split(':');
+                Session["userid"] = login[0];
+                Session["roleid"] = login[1];//Normale Gebruiker = 2, Administrator = 1
+                Session["companyid"] = login[2];
+                Session["entityid"] = login[3];
                 Response.Redirect("Default.aspx");
             }
             else
