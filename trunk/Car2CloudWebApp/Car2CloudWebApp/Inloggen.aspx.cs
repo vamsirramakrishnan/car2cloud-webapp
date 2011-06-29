@@ -19,6 +19,7 @@ namespace ictlab
         protected void Button1_Click(object sender, EventArgs e)
         {
             String url = "http://cars2cloud.appspot.com/cardata/AuthUser?Username=" + Gebruikersnaam.Text + "&Password=" + Wachtwoord.Text + "";
+            //String url = "http://localhost:8888/cardata/AuthUser?Username=" + Gebruikersnaam.Text + "&Password=" + Wachtwoord.Text + "";
 
             Uri serviceUri = new Uri(url, UriKind.Absolute);
 
