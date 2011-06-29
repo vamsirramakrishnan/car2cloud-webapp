@@ -56,7 +56,7 @@
             <asp:Label ID="Label12" runat="server" Text="leeg"></asp:Label>
         </p>
     </div>
-    <div id="dataViewRight">
+    <div id="dataViewRight" runat="server">
         <Web:ChartControl ID="ChartControl1" runat="server" BorderStyle="Outset" 
             BorderWidth="0" Height="300px" Width="400px" Border-Color="Black" PlotBackground-ForeColor="Black">
         </Web:ChartControl>
