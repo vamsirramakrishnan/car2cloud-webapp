@@ -52,7 +52,10 @@ namespace ictlab
                 {
                     gjsonResponse1 = gsr1.ReadToEnd();
                 }
-                //String adres1 = gjsonResponse1.Contains("address");
+
+                gjsonResponse1 = gjsonResponse1.Replace("{", "");
+                gjsonResponse1 = gjsonResponse1.Replace("}", "");
+                string[] blabla = gjsonResponse1.Split(',');
 
                 Beginpunt += Environment.NewLine + @"
                     path.push(new google.maps.LatLng(" + Latitude[0] + ", " + Longitude[0] + @"));
