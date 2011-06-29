@@ -24,7 +24,8 @@ namespace ictlab
         {
 
             /* dataSet ophalen uit de app engine */
-            string formattedUri = "http://3.cars2cloud.appspot.com/cardata/GetAll";
+            string formattedUri = "http://cars2cloud.appspot.com/cardata/GetAll";
+            //string formattedUri = "http://localhost:8888/cardata/GetAll";
             HttpWebRequest webRequest = GetWebRequest(formattedUri);
 
             HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
