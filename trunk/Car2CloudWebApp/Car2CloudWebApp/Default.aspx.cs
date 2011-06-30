@@ -22,12 +22,10 @@ namespace ictlab
 
         protected override void OnInit(EventArgs e)
         {
-            Session["layer"] = "leeg";
 
-            if (Session["roleid"].ToString() == "1" && Session["layer"] == "leeg") 
+            if (Session["roleid"].ToString() == "1") 
             {
                 /* Manager, na het inloggen */
-                Session["layer"] = "manager";
 
                 /* Medewerkers weergeven */
                 string uri = "http://cars2cloud.appspot.com/cardata/GetUserByCompany?companyid=" + Session["companyid"];
@@ -43,10 +41,9 @@ namespace ictlab
 
                 DataTable dtCompanyUsers = GetDatableAllCompanysUser(jsonResponse);
             }
-            else if (Session["roleid"].ToString() == "1" && Session["layer"] == "medewerker")
+            else if (Session["roleid"].ToString() == "1")
             {
                 /* Manager, medewerker bekijken */
-                Session["layer"] = "medewerker";
 
                 /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
                 string formattedUri = "http://cars2cloud.appspot.com/cardata/GetAll";
@@ -92,7 +89,6 @@ namespace ictlab
             else if (Session["roleid"].ToString() == "2") // Medewerker
             {
                 /* Medewerker, na het inloggen */
-                Session["layer"] = "medewerker";
 
                 /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
                 string formattedUri = "http://cars2cloud.appspot.com/cardata/GetAll";
@@ -292,7 +288,7 @@ namespace ictlab
         /* 
          * ListBox vullen met alle medewerkers van de manager
          */
-        private void fillListBoxWithEmployers(DataTable dataSet, int userId)
+        private void fillListBoxWithEmployers(DataTable dataSet)
         {
 
         }
@@ -580,15 +576,6 @@ namespace ictlab
         protected void Button1_Click(object sender, EventArgs e)
         {
 
-            if (Session["layer"] == "manager")
-            {
-                /* Medewerker ophalen */
-
-            }
-            else if (Session["layer"] == "medewerker")
-            {
-                /* Trip ophalen */
-
                 int selectedIndex = Convert.ToInt32(ListBox1.SelectedValue);
                 int tripId = selectedIndex;
 
@@ -611,7 +598,6 @@ namespace ictlab
                 String[] Latitude = GetLatitudes(dataSet, userId, tripId);
                 String[] Longitude = GetLongitudes(dataSet, userId, tripId);
                 js.Text = BuildScript(Latitude, Longitude);
-            }
         }
     }
 }

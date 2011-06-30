@@ -186,7 +186,17 @@ width: 398px;
     
 }
 
-#dataViewLeft
+#dataViewLeftTrips
+{
+    float: left;
+    margin-left: 40px;
+    margin-top: 26px;
+    width: 200px;
+    height: 265px;
+    border: 1px outset #000000;
+}
+
+#dataViewLeftEmployers
 {
     float: left;
     margin-left: 40px;

@@ -29,10 +29,15 @@
     <p class="ptext">Welkom Thomas Hendriksen. U bevindt zich in het overzicht van de door u gereden ritten. Het is mogelijk om informatie over de ritten op te vragen door deze te selecteren en op "ophalen" te klikken.
      </p>
     <br />
-    <div id="dataViewLeft">
+    <div id="dataViewLeftTrips" runat="server">
         <asp:ListBox CssClass="padding" ID="ListBox1" runat="server" Height="210px" Width="180px"></asp:ListBox>
         <asp:Button CssClass="paddingTwo" ID="Button1" runat="server" Width="180px"  
             Text="Ophalen" onclick="Button1_Click" />
+    </div>
+    <div id="dataViewLeftEmployers" runat="server">
+        <asp:ListBox CssClass="padding" ID="ListBox2" runat="server" Height="210px" Width="180px"></asp:ListBox>
+        <asp:Button CssClass="paddingTwo" ID="Button2" runat="server" Width="180px"  
+            Text="Bekijken" />
     </div>
     <div id="dataViewLeftTwo">
         <p class="padding">
