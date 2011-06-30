@@ -192,7 +192,7 @@ namespace ictlab
                 int Count = 0;
                 foreach (String value in Rows[rowIndex].Split(','))
                 {
-                    dr[Count] = (value.Split(','));
+                    dr[Count] = value;
                     Count++;
                 }
                 dtCompanyUsers.Rows.Add(dr);
