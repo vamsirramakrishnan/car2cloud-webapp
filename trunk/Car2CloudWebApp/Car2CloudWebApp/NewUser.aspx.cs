@@ -11,6 +11,9 @@ namespace ictlab
 {
     public partial class NewUser : System.Web.UI.Page
     {
+        string username;
+        string password;
+        
         protected override void OnInit(EventArgs e) 
         {
                 
@@ -40,6 +43,18 @@ namespace ictlab
             using (StreamReader sr = new StreamReader(response.GetResponseStream()))
             {
                 jsonResponse = sr.ReadToEnd();
+            }
+
+            if (jsonResponse != "")
+            {
+                string[] login = jsonResponse.Split(':');
+                username = login[0];
+                password = login[1];
+                lit.Text = "De nieuwe gebruiker heeft de volgende gegevens toegewezen gekregen:/nGebruikersnaam:" + username + "/nWachtwoord:" + password;
+            }
+            else {
+                lit.Text = "Er toevoegen van een nieuwe gebruiker is mislukt.";
+                lit.Visible=true;
             }
         }
     }

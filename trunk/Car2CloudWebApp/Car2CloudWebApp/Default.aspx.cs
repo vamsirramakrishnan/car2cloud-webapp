@@ -20,7 +20,15 @@ namespace ictlab
         int userId;
         DataTable dataSet;
 
-        protected override void OnInit(EventArgs e)
+        //protected override void OnInit(EventArgs e)
+        //{
+        //    base.OnInit(e);
+        //    if (Context != null && Context.Session != null){
+        //        int count = Session.Count;
+        //    }
+        //}
+
+        protected void Page_Load(object sender, EventArgs e)
         {
 
             if (Session["roleid"].ToString() == "1") 

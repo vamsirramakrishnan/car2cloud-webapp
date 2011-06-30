@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Overzicht" Language="C#" MasterPageFile="Site.master" AutoEventWireup="true"
-    CodeBehind="Default.aspx.cs" Inherits="ictlab.Default" %>
+    CodeBehind="Default.aspx.cs" Inherits="ictlab.Default" EnableSessionState="True" %>
 
 <%@ Register Assembly="WebChart" Namespace="WebChart" TagPrefix="Web" %>
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
