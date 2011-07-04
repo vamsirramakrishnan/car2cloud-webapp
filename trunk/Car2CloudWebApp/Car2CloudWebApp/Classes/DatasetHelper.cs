@@ -9,21 +9,21 @@ namespace ictlab.Classes
     {
         public enum CarDataColumn
         {
-            EntityID = 0,
-            TripId = 1,
-            VehicleId = 2,
-            Timestamp = 3,
-            Latitude = 4,
-            Longtitude = 5,
-            Height =6,
-            Speed = 7,
-            EngineRPM = 8,
-            Temperature = 9,
-            AmbientTemperature = 10,
-            EngineLoad = 11,
-            FuelEconomy = 12,
-            LongTermFuelTrim = 13,
-            ShortTermFuelTrip = 14
+            EntityID = 1,
+            TripId = 2,
+            VehicleId = 14,
+            Timestamp = 0,
+            Latitude = 3,
+            Longtitude = 4,
+            Height =5,
+            Speed = 6,
+            EngineRPM = 7,
+            Temperature = 8,
+            AmbientTemperature = 9,
+            EngineLoad = 10,
+            FuelEconomy = 11,
+            LongTermFuelTrim = 12,
+            ShortTermFuelTrip = 13
 
         }
     }
