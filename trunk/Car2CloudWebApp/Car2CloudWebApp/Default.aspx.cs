@@ -20,14 +20,6 @@ namespace ictlab
         int userId;
         DataTable dataSet;
 
-        //protected override void OnInit(EventArgs e)
-        //{
-        //    base.OnInit(e);
-        //    if (Context != null && Context.Session != null){
-        //        int count = Session.Count;
-        //    }
-        //}
-
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -48,50 +40,12 @@ namespace ictlab
                 }
 
                 DataTable dtCompanyUsers = GetDatableAllCompanysUser(jsonResponse);
-            }
-            else if (Session["roleid"].ToString() == "1")
-            {
-                /* Manager, medewerker bekijken */
 
-                /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
-                string formattedUri = "http://cars2cloud.appspot.com/cardata/GetAll";
-                //string formattedUri = "http://localhost:8888/cardata/GetAll";
-                HttpWebRequest webRequest = GetWebRequest(formattedUri);
+                fillListBoxWithEmployers(dtCompanyUsers);
 
-                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-                string jsonResponse = string.Empty;
-                using (StreamReader sr = new StreamReader(response.GetResponseStream()))
-                {
-                    jsonResponse = sr.ReadToEnd();
-                }
-
-                /* dataSet ophalen */
-                dataSet = GetDataTableFromJson(jsonResponse);
-
-                /* Ingelogd met een userId */
-                userId = Convert.ToInt32(Session["userid"]);
-                int tripId = 1; // default
-
-                /*ListBox vullen */
-                fillListBoxWithTrips(dataSet, userId);
-
-                /* Gemiddelde snelheid */
-                int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
-                Label5.Text = averageSpeed + " km/uur";
-                int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
-                Label10.Text = averageSpeedAll + " km/uur";
-
-                /* linechart */
-                LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
-                ConfigureColors();
-                one.ShowLineMarkers = false;
-                ChartControl1.Charts.Add(one);
-                ChartControl1.RedrawChart();
-
-                /* GoogleMaps */
-                String[] Latitude = GetLatitudes(dataSet, userId, tripId);
-                String[] Longitude = GetLongitudes(dataSet, userId, tripId);
-                js.Text = BuildScript(Latitude, Longitude);
+                dataViewLeftTrips.Visible = false;
+                dataViewLeftEmployers.Visible = true;
+                
 
             }
             else if (Session["roleid"].ToString() == "2") // Medewerker
@@ -299,6 +253,19 @@ namespace ictlab
         private void fillListBoxWithEmployers(DataTable dataSet)
         {
 
+            List<string> listBoxItems = new List<string>();
+
+            foreach (DataRow r in dataSet.Rows)
+            {
+                string tempId = r.ItemArray.ElementAt(0).ToString();
+                string tempName = r.ItemArray.ElementAt(2).ToString();
+                string tempRearName = r.ItemArray.ElementAt(3).ToString();
+
+                listBoxItems.Add(tempId + " | " + tempName + " " + tempRearName);
+            }
+
+            ListBox2.DataSource = listBoxItems;
+            ListBox2.DataBind();
         }
 
         /**
@@ -606,6 +573,58 @@ namespace ictlab
                 String[] Latitude = GetLatitudes(dataSet, userId, tripId);
                 String[] Longitude = GetLongitudes(dataSet, userId, tripId);
                 js.Text = BuildScript(Latitude, Longitude);
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+
+            string select = ListBox2.SelectedValue;
+            string[] splits = select.Split('|');
+            splits[0].Replace(" ","");
+            int id = Convert.ToInt32(splits[0]);
+
+            dataViewLeftTrips.Visible = true;
+            dataViewLeftEmployers.Visible = false;
+
+            /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
+            string formattedUri = "http://cars2cloud.appspot.com/cardata/GetAll";
+            //string formattedUri = "http://localhost:8888/cardata/GetAll";
+            HttpWebRequest webRequest = GetWebRequest(formattedUri);
+
+            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+            string jsonResponse = string.Empty;
+            using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+            {
+                jsonResponse = sr.ReadToEnd();
+            }
+
+            /* dataSet ophalen */
+            dataSet = GetDataTableFromJson(jsonResponse);
+
+            /* Ingelogd met een userId */
+            userId = id;
+            int tripId = 1; // default
+
+            /*ListBox vullen */
+            fillListBoxWithTrips(dataSet, userId);
+
+            /* Gemiddelde snelheid */
+            int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
+            Label5.Text = averageSpeed + " km/uur";
+            int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
+            Label10.Text = averageSpeedAll + " km/uur";
+
+            /* linechart */
+            LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
+            ConfigureColors();
+            one.ShowLineMarkers = false;
+            ChartControl1.Charts.Add(one);
+            ChartControl1.RedrawChart();
+
+            /* GoogleMaps */
+            String[] Latitude = GetLatitudes(dataSet, userId, tripId);
+            String[] Longitude = GetLongitudes(dataSet, userId, tripId);
+            js.Text = BuildScript(Latitude, Longitude);
         }
     }
 }

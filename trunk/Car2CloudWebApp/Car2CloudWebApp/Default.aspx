@@ -37,7 +37,7 @@
     <div id="dataViewLeftEmployers" runat="server">
         <asp:ListBox CssClass="padding" ID="ListBox2" runat="server" Height="210px" Width="180px"></asp:ListBox>
         <asp:Button CssClass="paddingTwo" ID="Button2" runat="server" Width="180px"  
-            Text="Bekijken" />
+            Text="Bekijken" onclick="Button2_Click" />
     </div>
     <div id="dataViewLeftTwo">
         <p class="padding">
