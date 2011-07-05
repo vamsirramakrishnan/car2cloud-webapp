@@ -26,31 +26,63 @@ namespace ictlab
 
             if (Session["roleid"].ToString() == "1")
             {
-                /* Manager, na het inloggen */
-
-                /* Medewerkers weergeven */
-                string uri = "http://cars2cloud.appspot.com/cardata/GetUserByCompany?companyid=" + Session["companyid"];
-
-                HttpWebRequest webRequest = GetWebRequest(uri);
-
-                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-                string jsonResponse = string.Empty;
-                using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                if (Request.QueryString["entityid"] == null )
                 {
-                    jsonResponse = sr.ReadToEnd();
+                    PnlManager.Visible = true;
+                    /* Manager, na het inloggen */
+
+                    /* Medewerkers weergeven */
+                    string uri = "http://cars2cloud.appspot.com/cardata/GetUserByCompany?companyid=" + Session["companyid"];
+
+                    HttpWebRequest webRequest = GetWebRequest(uri);
+
+                    HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+                    string jsonResponse = string.Empty;
+                    using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                    {
+                        jsonResponse = sr.ReadToEnd();
+                    }
+
+                    DataTable dtCompanyUsers = GetDatableAllCompanysUser(jsonResponse);
+                    if (!IsPostBack)
+                    {
+                        fillListBoxWithEmployers(dtCompanyUsers);
+                    }
                 }
+                else
+                {
+                    string entity = Request.QueryString["entityid"];
+                    PnlTrips.Visible = true;
+                    /* Medewerker, na het inloggen */
 
-                DataTable dtCompanyUsers = GetDatableAllCompanysUser(jsonResponse);
+                    /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
+                    string formattedUri = "http://cars2cloud.appspot.com/cardata/GetDataByEntity?entityid=" + entity;
+                    //string formattedUri = "http://localhost:8888/cardata/GetAll";
+                    HttpWebRequest webRequest = GetWebRequest(formattedUri);
 
-                fillListBoxWithEmployers(dtCompanyUsers);
+                    HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+                    string jsonResponse = string.Empty;
+                    using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                    {
+                        jsonResponse = sr.ReadToEnd();
+                    }
 
-                dataViewLeftTrips.Visible = false;
-                dataViewLeftEmployers.Visible = true;
+                    /* dataSet ophalen */
+                    dataSet = GetDataTableFromJson(jsonResponse);
 
+                    if (!IsPostBack)
+                    {
+                        /*ListBox vullen */
+                        fillListBoxWithTrips(dataSet);
+                    }
+                }
 
             }
             else if (Session["roleid"].ToString() == "2") // Medewerker
             {
+               
+
+                PnlTrips.Visible = true;
                 /* Medewerker, na het inloggen */
 
                 /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
@@ -72,9 +104,8 @@ namespace ictlab
                 userId = Convert.ToInt32(Session["userid"]);
                 if (!IsPostBack)
                 {
-
                     /*ListBox vullen */
-                    fillListBoxWithTrips(dataSet, userId);
+                    fillListBoxWithTrips(dataSet);
                 }
             }
         }
@@ -211,14 +242,14 @@ namespace ictlab
         /* 
          * ListBox vullen met alle trips van de gebruiker
          */
-        private void fillListBoxWithTrips(DataTable dataSet, int userId)
+        private void fillListBoxWithTrips(DataTable dataSet)
         {
 
             List<string> listBoxItems = new List<string>();
 
             foreach (DataRow r in dataSet.Rows)
             {
-                string tempTripId = r.ItemArray.ElementAt(2).ToString();
+                string tempTripId = r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.TripId).ToString();
                 if (!listBoxItems.Contains(tempTripId))
                 {
 
@@ -236,19 +267,26 @@ namespace ictlab
         private void fillListBoxWithEmployers(DataTable dataSet)
         {
 
-            //List<string> listBoxItems = new List<string>();
+            List<string> listBoxItems = new List<string>();
+            DataTable Users = new DataTable();
+            Users.Columns.Add("Displayname");
+            Users.Columns.Add("Value");
+            foreach (DataRow r in dataSet.Rows)
+            {
+                string tempId = r.ItemArray.ElementAt(0).ToString();
+                string EntityID = r.ItemArray.ElementAt(1).ToString();
+                string tempName = r.ItemArray.ElementAt(2).ToString();
+                string tempRearName = r.ItemArray.ElementAt(3).ToString();
+                DataRow userRow = Users.NewRow();
+                userRow[0] = tempId + " | " + tempName + " " + tempRearName;
+                userRow[1] = EntityID;
+                Users.Rows.Add(userRow);
+            }
 
-            //foreach (DataRow r in dataSet.Rows)
-            //{
-            //    string tempId = r.ItemArray.ElementAt(0).ToString();
-            //    string tempName = r.ItemArray.ElementAt(2).ToString();
-            //    string tempRearName = r.ItemArray.ElementAt(3).ToString();
-
-            //    listBoxItems.Add(tempId + " | " + tempName + " " + tempRearName);
-            //}
-
-            //ListBox2.DataSource = listBoxItems;
-            //ListBox2.DataBind();
+            ListBox2.DataSource = Users;
+            ListBox2.DataValueField = "Value";
+            ListBox2.DataTextField = "Displayname";
+            ListBox2.DataBind();
         }
 
         /**
@@ -444,7 +482,6 @@ namespace ictlab
 
             int count = 0;
             string[] latitudes = new string[dataSet.Select("tripId = " + tripId).Count()];
-            
             foreach (DataRow r in dataSet.Rows)
             {
                 if (Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.TripId).ToString()) == tripId)
@@ -478,66 +515,58 @@ namespace ictlab
             return longitudes;
         }
 
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-
-
-        }
-
+   
         protected void Button2_Click(object sender, EventArgs e)
         {
 
             string select = ListBox2.SelectedValue;
-            string[] splits = select.Split('|');
-            splits[0].Replace(" ", "");
-            int id = Convert.ToInt32(splits[0]);
+            Response.Redirect("./default.aspx?entityid=" + select);
 
-            dataViewLeftTrips.Visible = true;
-            dataViewLeftEmployers.Visible = false;
 
-            /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
-            string formattedUri = "http://cars2cloud.appspot.com/cardata/GetAll";
-            //string formattedUri = "http://localhost:8888/cardata/GetAll";
-            HttpWebRequest webRequest = GetWebRequest(formattedUri);
+            ///* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
+            //string formattedUri = "http://cars2cloud.appspot.com/cardata/GetDataByEntity?entityid=" + select;
+            ////string formattedUri = "http://localhost:8888/cardata/GetAll";
+            //HttpWebRequest webRequest = GetWebRequest(formattedUri);
 
-            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-            string jsonResponse = string.Empty;
-            using (StreamReader sr = new StreamReader(response.GetResponseStream()))
-            {
-                jsonResponse = sr.ReadToEnd();
-            }
+            //HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+            //string jsonResponse = string.Empty;
+            //using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+            //{
+            //    jsonResponse = sr.ReadToEnd();
+            //}
 
-            /* dataSet ophalen */
-            dataSet = GetDataTableFromJson(jsonResponse);
+            ///* dataSet ophalen */
+            //dataSet = GetDataTableFromJson(jsonResponse);
 
-            /* Ingelogd met een userId */
-            userId = id;
-            int tripId = 1; // default
+            ///* Ingelogd met een userId */
+            //userId = id;
+            //int tripId = 1; // default
 
-            /*ListBox vullen */
-            fillListBoxWithTrips(dataSet, userId);
+            ///*ListBox vullen */
+            //fillListBoxWithTrips(dataSet, userId);
 
-            /* Gemiddelde snelheid */
-            int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
-            Label5.Text = averageSpeed + " km/uur";
-            int averageSpeedAll = GetAverageSpeed(dataSet, userId);
-            Label10.Text = averageSpeedAll + " km/uur";
+            ///* Gemiddelde snelheid */
+            //int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
+            //Label5.Text = averageSpeed + " km/uur";
+            //int averageSpeedAll = GetAverageSpeed(dataSet, userId);
+            //Label10.Text = averageSpeedAll + " km/uur";
 
-            /* linechart */
-            LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
-            ConfigureColors();
-            one.ShowLineMarkers = false;
-            ChartControl1.Charts.Add(one);
-            ChartControl1.RedrawChart();
+            ///* linechart */
+            //LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
+            //ConfigureColors();
+            //one.ShowLineMarkers = false;
+            //ChartControl1.Charts.Add(one);
+            //ChartControl1.RedrawChart();
 
-            /* GoogleMaps */
-            String[] Latitude = GetLatitudes(dataSet, userId, tripId);
-            String[] Longitude = GetLongitudes(dataSet, userId, tripId);
-            js.Text = BuildScript(Latitude, Longitude);
+            ///* GoogleMaps */
+            //String[] Latitude = GetLatitudes(dataSet, userId, tripId);
+            //String[] Longitude = GetLongitudes(dataSet, userId, tripId);
+            //js.Text = BuildScript(Latitude, Longitude);
         }
 
         protected void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            PnlTripData.Visible = true;
             int tripId = Convert.ToInt32(ListBox1.SelectedItem.Text);
 
 

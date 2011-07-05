@@ -29,19 +29,24 @@
     <p class="ptext">Welkom Thomas Hendriksen. U bevindt zich in het overzicht van de door u gereden ritten. Het is mogelijk om informatie over de ritten op te vragen door deze te selecteren en op "ophalen" te klikken.
      </p>
     <br />
-    <div id="dataViewLeftTrips" runat="server">
-        <asp:ListBox CssClass="padding" ID="ListBox1" runat="server" Height="210px" 
-            Width="180px" AutoPostBack="True" 
-            onselectedindexchanged="ListBox1_SelectedIndexChanged"></asp:ListBox>
-    </div>
-    <asp:Panel ID="PnlManager" runat="server" Visible="false">
+     <asp:Panel ID="PnlManager" runat="server" Visible="false">
     
-    <div id="dataViewLeftEmployers" runat="server">
+    <div id="dataViewLeftEmployers">
         <asp:ListBox CssClass="padding" ID="ListBox2" runat="server" Height="210px" Width="180px"></asp:ListBox>
         <asp:Button CssClass="paddingTwo" ID="Button2" runat="server" Width="180px"  
             Text="Bekijken" onclick="Button2_Click" />
     </div>
     </asp:Panel>
+    <asp:Panel ID="PnlTrips" runat="server" Visible="false">
+   
+    <div id="dataViewLeftTrips" >
+        <asp:ListBox CssClass="padding" ID="ListBox1" runat="server" Height="210px" 
+            Width="180px" AutoPostBack="True" 
+            onselectedindexchanged="ListBox1_SelectedIndexChanged"></asp:ListBox>
+    </div>
+    </asp:Panel>
+    <asp:Panel ID="PnlTripData" runat="server" Visible="false">
+    
     <div id="dataViewLeftTwo">
         <p class="padding">
             <asp:Label ID="Label1" runat="server" Width="180px" Text="Den Haag - Rotterdam" Font-Bold="True"></asp:Label>
@@ -72,4 +77,5 @@
     <div id="dataViewCenter">
         <div id="map_canvas"></div>
     </div>
+    </asp:Panel>
 </asp:Content>
