@@ -24,7 +24,6 @@ namespace ictlab.Classes
             FuelEconomy = 11,
             LongTermFuelTrim = 12,
             ShortTermFuelTrip = 13
-
         }
     }
 }

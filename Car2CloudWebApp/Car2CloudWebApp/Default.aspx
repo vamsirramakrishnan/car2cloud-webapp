@@ -30,15 +30,18 @@
      </p>
     <br />
     <div id="dataViewLeftTrips" runat="server">
-        <asp:ListBox CssClass="padding" ID="ListBox1" runat="server" Height="210px" Width="180px"></asp:ListBox>
-        <asp:Button CssClass="paddingTwo" ID="Button1" runat="server" Width="180px"  
-            Text="Ophalen" onclick="Button1_Click" />
+        <asp:ListBox CssClass="padding" ID="ListBox1" runat="server" Height="210px" 
+            Width="180px" AutoPostBack="True" 
+            onselectedindexchanged="ListBox1_SelectedIndexChanged"></asp:ListBox>
     </div>
+    <asp:Panel ID="PnlManager" runat="server" Visible="false">
+    
     <div id="dataViewLeftEmployers" runat="server">
         <asp:ListBox CssClass="padding" ID="ListBox2" runat="server" Height="210px" Width="180px"></asp:ListBox>
         <asp:Button CssClass="paddingTwo" ID="Button2" runat="server" Width="180px"  
             Text="Bekijken" onclick="Button2_Click" />
     </div>
+    </asp:Panel>
     <div id="dataViewLeftTwo">
         <p class="padding">
             <asp:Label ID="Label1" runat="server" Width="180px" Text="Den Haag - Rotterdam" Font-Bold="True"></asp:Label>
