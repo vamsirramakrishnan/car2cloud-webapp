@@ -12,6 +12,7 @@ using System.IO;
 using System.Data;
 using WebChart;
 using System.Drawing;
+using ictlab.Classes;
 
 namespace ictlab
 {
@@ -23,7 +24,7 @@ namespace ictlab
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (Session["roleid"].ToString() == "1") 
+            if (Session["roleid"].ToString() == "1")
             {
                 /* Manager, na het inloggen */
 
@@ -45,7 +46,7 @@ namespace ictlab
 
                 dataViewLeftTrips.Visible = false;
                 dataViewLeftEmployers.Visible = true;
-                
+
 
             }
             else if (Session["roleid"].ToString() == "2") // Medewerker
@@ -53,7 +54,7 @@ namespace ictlab
                 /* Medewerker, na het inloggen */
 
                 /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
-                string formattedUri = "http://cars2cloud.appspot.com/cardata/GetAll";
+                string formattedUri = "http://cars2cloud.appspot.com/cardata/GetDataByEntity?entityid=" + Session["entityid"];
                 //string formattedUri = "http://localhost:8888/cardata/GetAll";
                 HttpWebRequest webRequest = GetWebRequest(formattedUri);
 
@@ -69,28 +70,12 @@ namespace ictlab
 
                 /* Ingelogd met een userId */
                 userId = Convert.ToInt32(Session["userid"]);
-                int tripId = 1; // default
+                if (!IsPostBack)
+                {
 
-                /*ListBox vullen */
-                fillListBoxWithTrips(dataSet, userId);
-
-                /* Gemiddelde snelheid */
-                int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
-                Label5.Text = averageSpeed + " km/uur";
-                int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
-                Label10.Text = averageSpeedAll + " km/uur";
-
-                /* linechart */
-                LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
-                ConfigureColors();
-                one.ShowLineMarkers = false;
-                ChartControl1.Charts.Add(one);
-                ChartControl1.RedrawChart();
-
-                /* GoogleMaps */
-                String[] Latitude = GetLatitudes(dataSet, userId, tripId);
-                String[] Longitude = GetLongitudes(dataSet, userId, tripId);
-                js.Text = BuildScript(Latitude, Longitude);
+                    /*ListBox vullen */
+                    fillListBoxWithTrips(dataSet, userId);
+                }
             }
         }
 
@@ -103,9 +88,10 @@ namespace ictlab
             return (HttpWebRequest)System.Net.WebRequest.Create(serviceUri);
         }
 
-        private DataTable GetDatableAllCompanysUser(string Json) {
+        private DataTable GetDatableAllCompanysUser(string Json)
+        {
             DataTable dtCompanyUsers = new DataTable();
-            String cleanjson = Json.Replace("[", "").Replace("]", "").Replace("\",\"",":").Replace("\"","");
+            String cleanjson = Json.Replace("[", "").Replace("]", "").Replace("\",\"", ":").Replace("\"", "");
             String[] Rows = cleanjson.Split(':');
             String[] tempRows = new String[Rows.Length];
             int rowLength = Rows.Length;
@@ -232,11 +218,8 @@ namespace ictlab
 
             foreach (DataRow r in dataSet.Rows)
             {
-
-                string temp = r.ItemArray.ElementAt(1).ToString();
-                int tempUserId = Convert.ToInt32(temp);
                 string tempTripId = r.ItemArray.ElementAt(2).ToString();
-                if (tempUserId == userId && !listBoxItems.Contains(tempTripId))
+                if (!listBoxItems.Contains(tempTripId))
                 {
 
                     listBoxItems.Add(tempTripId);
@@ -253,19 +236,19 @@ namespace ictlab
         private void fillListBoxWithEmployers(DataTable dataSet)
         {
 
-            List<string> listBoxItems = new List<string>();
+            //List<string> listBoxItems = new List<string>();
 
-            foreach (DataRow r in dataSet.Rows)
-            {
-                string tempId = r.ItemArray.ElementAt(0).ToString();
-                string tempName = r.ItemArray.ElementAt(2).ToString();
-                string tempRearName = r.ItemArray.ElementAt(3).ToString();
+            //foreach (DataRow r in dataSet.Rows)
+            //{
+            //    string tempId = r.ItemArray.ElementAt(0).ToString();
+            //    string tempName = r.ItemArray.ElementAt(2).ToString();
+            //    string tempRearName = r.ItemArray.ElementAt(3).ToString();
 
-                listBoxItems.Add(tempId + " | " + tempName + " " + tempRearName);
-            }
+            //    listBoxItems.Add(tempId + " | " + tempName + " " + tempRearName);
+            //}
 
-            ListBox2.DataSource = listBoxItems;
-            ListBox2.DataBind();
+            //ListBox2.DataSource = listBoxItems;
+            //ListBox2.DataBind();
         }
 
         /**
@@ -273,28 +256,21 @@ namespace ictlab
          * tripId op 0 geeft gemiddelde snelheid van alle trips.
          * @author: Richard
          */
-        private int GetAverageSpeed(DataTable dataSet, int userId, int tripId)
+        private int GetAverageSpeed(DataTable dataSet, int userId, int tripId = -1)
         {
-
             int averageSpeed = 0;
-
-            /* Van 1 trip wordt er de gemiddelde snelheid berekent */
-            if (tripId > 0)
+            if (tripId != -1)
             {
 
+                /* Van 1 trip wordt er de gemiddelde snelheid berekent */
                 int count = 0;
                 int averageTrip = 0;
                 foreach (DataRow r in dataSet.Rows)
                 {
-
-                    string temp = r.ItemArray.ElementAt(1).ToString();
-                    int tempUserId = Convert.ToInt32(temp);
-                    string temp2 = r.ItemArray.ElementAt(2).ToString();
-                    int tempTripId = Convert.ToInt32(temp2);
-                    if (userId == tempUserId && tempTripId == tripId)
+                    if (Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.TripId).ToString()) == tripId)
                     {
 
-                        averageTrip = averageTrip + Convert.ToInt32(r.ItemArray.ElementAt(6).ToString());
+                        averageTrip = averageTrip + Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.Speed).ToString());
                         count++;
                     }
                 }
@@ -310,24 +286,24 @@ namespace ictlab
                     averageSpeed = (averageTrip / count);
                 }
             }
-
-            /* Van alle trips wordt de gemiddelde snelheid gemeten */
-            else if (tripId == 0)
+            else
             {
+                /* Van alle trips wordt de gemiddelde snelheid gemeten */
+
 
                 int count = 0;
                 int averageTrip = 0;
                 foreach (DataRow r in dataSet.Rows)
                 {
 
-                    string temp = r.ItemArray.ElementAt(1).ToString();
-                    int tempUserId = Convert.ToInt32(temp);
-                    if (userId == tempUserId)
-                    {
+                    //string temp = r.ItemArray.ElementAt(1).ToString();
+                    //int tempUserId = Convert.ToInt32(temp);
+                    //if (userId == tempUserId)
+                    //{
 
-                        averageTrip = averageTrip + Convert.ToInt32(r.ItemArray.ElementAt(6).ToString());
-                        count++;
-                    }
+                    averageTrip = averageTrip + Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.Speed).ToString());
+                    count++;
+                    //}
                 }
 
                 if (count == 0)
@@ -379,11 +355,7 @@ namespace ictlab
             foreach (DataRow r in dataSet.Rows)
             {
 
-                string temp = r.ItemArray.ElementAt(1).ToString();
-                int tempUserId = Convert.ToInt32(temp);
-                string temp2 = r.ItemArray.ElementAt(2).ToString();
-                int tempTripId = Convert.ToInt32(temp2);
-                if (userId == tempUserId && tempTripId == tripId)
+                if (Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.TripId).ToString()) == tripId)
                 {
                     string number = count.ToString();
                     chart.Data.Add(new ChartPoint("", Convert.ToInt64(r.ItemArray.ElementAt(6).ToString())));
@@ -413,14 +385,13 @@ namespace ictlab
                 for (int i = 0; i < Latitude.Length; )
                 {
                     // JavaScript maken voor de overlay             
-                    Locations += Environment.NewLine + @"
-                    path.push(new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"));
+                    Locations += Environment.NewLine + @"path.push(new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"));";
 
-                    var marker" + i.ToString() + @" = new google.maps.Marker({
-                        position: new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"),
-                        title: '#' + path.getLength(),
-                        map: map
-                    });";
+                    //var marker" + i.ToString() + @" = new google.maps.Marker({
+                    //     position: new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"),
+                    //    title: '#' + path.getLength(),
+                    //   map: map
+                    // });";
                     i++;
                 }
 
@@ -472,33 +443,13 @@ namespace ictlab
         {
 
             int count = 0;
+            string[] latitudes = new string[dataSet.Select("tripId = " + tripId).Count()];
+            
             foreach (DataRow r in dataSet.Rows)
             {
-
-                string temp = r.ItemArray.ElementAt(1).ToString();
-                int tempUserId = Convert.ToInt32(temp);
-                string temp2 = r.ItemArray.ElementAt(2).ToString();
-                int tempTripId = Convert.ToInt32(temp2);
-                if (userId == tempUserId && tempTripId == tripId)
+                if (Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.TripId).ToString()) == tripId)
                 {
-                    count++;
-                }
-            }
-
-            string[] latitudes = new string[count];
-
-            count = 0;
-            foreach (DataRow r in dataSet.Rows)
-            {
-
-                string temp = r.ItemArray.ElementAt(1).ToString();
-                int tempUserId = Convert.ToInt32(temp);
-                string temp2 = r.ItemArray.ElementAt(2).ToString();
-                int tempTripId = Convert.ToInt32(temp2);
-                if (userId == tempUserId && tempTripId == tripId)
-                {
-
-                    latitudes[count] = r.ItemArray.ElementAt(3).ToString();
+                    latitudes[count] = r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.Latitude).ToString();
                     count++;
                 }
             }
@@ -514,33 +465,12 @@ namespace ictlab
         {
 
             int count = 0;
+            string[] longitudes = new string[dataSet.Select("tripId = " + tripId).Count()];
             foreach (DataRow r in dataSet.Rows)
             {
-
-                string temp = r.ItemArray.ElementAt(1).ToString();
-                int tempUserId = Convert.ToInt32(temp);
-                string temp2 = r.ItemArray.ElementAt(2).ToString();
-                int tempTripId = Convert.ToInt32(temp2);
-                if (userId == tempUserId && tempTripId == tripId)
+                if (Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.TripId).ToString()) == tripId)
                 {
-                    count++;
-                }
-            }
-
-            string[] longitudes = new string[count];
-
-            count = 0;
-            foreach (DataRow r in dataSet.Rows)
-            {
-
-                string temp = r.ItemArray.ElementAt(1).ToString();
-                int tempUserId = Convert.ToInt32(temp);
-                string temp2 = r.ItemArray.ElementAt(2).ToString();
-                int tempTripId = Convert.ToInt32(temp2);
-                if (userId == tempUserId && tempTripId == tripId)
-                {
-
-                    longitudes[count] = r.ItemArray.ElementAt(4).ToString();
+                    longitudes[count] = r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.Longtitude).ToString();
                     count++;
                 }
             }
@@ -551,28 +481,7 @@ namespace ictlab
         protected void Button1_Click(object sender, EventArgs e)
         {
 
-                int selectedIndex = Convert.ToInt32(ListBox1.SelectedValue);
-                int tripId = selectedIndex;
 
-                ChartControl1.Charts.Clear();
-
-                /* Gemiddelde snelheid */
-                int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
-                Label5.Text = averageSpeed + " km/uur";
-                int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
-                Label10.Text = averageSpeedAll + " km/uur";
-
-                /* linechart */
-                LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
-                ConfigureColors();
-                one.ShowLineMarkers = false;
-                ChartControl1.Charts.Add(one);
-                ChartControl1.RedrawChart();
-
-                /* GoogleMaps */
-                String[] Latitude = GetLatitudes(dataSet, userId, tripId);
-                String[] Longitude = GetLongitudes(dataSet, userId, tripId);
-                js.Text = BuildScript(Latitude, Longitude);
         }
 
         protected void Button2_Click(object sender, EventArgs e)
@@ -580,7 +489,7 @@ namespace ictlab
 
             string select = ListBox2.SelectedValue;
             string[] splits = select.Split('|');
-            splits[0].Replace(" ","");
+            splits[0].Replace(" ", "");
             int id = Convert.ToInt32(splits[0]);
 
             dataViewLeftTrips.Visible = true;
@@ -611,7 +520,7 @@ namespace ictlab
             /* Gemiddelde snelheid */
             int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
             Label5.Text = averageSpeed + " km/uur";
-            int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
+            int averageSpeedAll = GetAverageSpeed(dataSet, userId);
             Label10.Text = averageSpeedAll + " km/uur";
 
             /* linechart */
@@ -625,6 +534,57 @@ namespace ictlab
             String[] Latitude = GetLatitudes(dataSet, userId, tripId);
             String[] Longitude = GetLongitudes(dataSet, userId, tripId);
             js.Text = BuildScript(Latitude, Longitude);
+        }
+
+        protected void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int tripId = Convert.ToInt32(ListBox1.SelectedItem.Text);
+
+
+            /* Gemiddelde snelheid */
+            int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
+            Label5.Text = averageSpeed + " km/uur";
+            int averageSpeedAll = GetAverageSpeed(dataSet, userId);
+            Label10.Text = averageSpeedAll + " km/uur";
+
+            /* linechart */
+            LineChart one = newLine(dataSet, "Trip nummer " + tripId, ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
+            ConfigureColors();
+            one.ShowLineMarkers = false;
+            ChartControl1.Charts.Add(one);
+            ChartControl1.RedrawChart();
+
+            /* GoogleMaps */
+            String[] Latitude = GetLatitudes(dataSet, userId, tripId);
+            String[] Longitude = GetLongitudes(dataSet, userId, tripId);
+            js.Text = BuildScript(Latitude, Longitude);
+
+
+
+
+
+            //int selectedIndex = Convert.ToInt32(ListBox1.SelectedItem.Text);
+            //int tripId = selectedIndex;
+
+            //ChartControl1.Charts.Clear();
+
+            ///* Gemiddelde snelheid */
+            //int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
+            //Label5.Text = averageSpeed + " km/uur";
+            //int averageSpeedAll = GetAverageSpeed(dataSet, userId, 0);
+            //Label10.Text = averageSpeedAll + " km/uur";
+
+            ///* linechart */
+            //LineChart one = newLine(dataSet, "Trip nummer 1", ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
+            //ConfigureColors();
+            //one.ShowLineMarkers = false;
+            //ChartControl1.Charts.Add(one);
+            //ChartControl1.RedrawChart();
+
+            ///* GoogleMaps */
+            //String[] Latitude = GetLatitudes(dataSet, userId, tripId);
+            //String[] Longitude = GetLongitudes(dataSet, userId, tripId);
+            //js.Text = BuildScript(Latitude, Longitude);
         }
     }
 }
