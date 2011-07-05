@@ -24,7 +24,13 @@ namespace ictlab
             if (Session["roleid"].ToString() == "2")
             {
                 lit.Text = "U bent niet gerechtigd een nieuwe gebruiker toe te voegen. Klik <a href=\"Default.aspx\">hier</a> om terug te keren naar de default pagina.";
+                lit.Visible = true;
                 tableNewUser.Visible = false;
+            }
+
+            if (IsPostBack){
+                tableNewUser.Visible = false;
+                lit.Visible = true;
             }
         }
 
@@ -50,10 +56,10 @@ namespace ictlab
                 string[] login = jsonResponse.Split(':');
                 username = login[0];
                 password = login[1];
-                lit.Text = "De nieuwe gebruiker heeft de volgende gegevens toegewezen gekregen:/nGebruikersnaam:" + username + "/nWachtwoord:" + password;
+                lit.Text = "De nieuwe gebruiker heeft de volgende gegevens toegewezen gekregen:<br />Gebruikersnaam:" + username + "<br />Wachtwoord:" + password;
             }
             else {
-                lit.Text = "Er toevoegen van een nieuwe gebruiker is mislukt.";
+                lit.Text = "Het toevoegen van een nieuwe gebruiker is mislukt.";
                 lit.Visible=true;
             }
         }
