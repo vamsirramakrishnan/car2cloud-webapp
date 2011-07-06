@@ -236,6 +236,33 @@ width: 398px;
     border: 1px outset #000000;
 }
 
+#subMenu
+{
+    margin-top: 10px;
+    margin-left: 25px;
+}
+
+#subMenu lu
+{
+    margin: 0px;
+    padding: 0px;
+}
+
+#subMenu li
+{
+    color: #000;
+    font-size: 12px;
+    font-family: Tahoma;
+    font-weight: bold;
+    margin-right: 20px;
+    list-style-image:url(../images/menuItem.gif); 
+}
+
+#subMenu li a
+{
+    color: #000;
+}
+
 .padding
 {
     margin: 10px;
