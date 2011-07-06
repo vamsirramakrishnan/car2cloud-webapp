@@ -24,9 +24,10 @@
     <a href="Uitloggen.aspx">Uitloggen</a>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
-    <div class="titel2">Overzicht</div>
+    <div class="titel2"><a href="Default.aspx">Overzicht</a></div>
     <img id="line" src="Images/loginLine.gif" width="870" height="2" alt="line" />
-    <p class="ptext">Welkom Thomas Hendriksen. U bevindt zich in het overzicht van de door u gereden ritten. Het is mogelijk om informatie over de ritten op te vragen door deze te selecteren en op "ophalen" te klikken.
+    <p class="ptext">
+        <asp:Label ID="welkomstTekst" runat="server" Text="Label"></asp:Label>
      </p>
     <br />
      <asp:Panel ID="PnlManager" runat="server" Visible="false">
@@ -49,7 +50,7 @@
     
     <div id="dataViewLeftTwo">
         <p class="padding">
-            <asp:Label ID="Label1" runat="server" Width="180px" Text="Den Haag - Rotterdam" Font-Bold="True"></asp:Label>
+            <asp:Label ID="Label1" runat="server" Width="180px" Text="Huidige trip" Font-Bold="True"></asp:Label>
             <br /><br />
             <asp:Label ID="Label2" runat="server" Width="100px" Text="Datum:"></asp:Label>
             <asp:Label ID="Label3" runat="server" Text="11-06-2011"></asp:Label>
@@ -60,7 +61,7 @@
             <asp:Label ID="Label6" runat="server" Width="100px" Text="Top snelheid:"></asp:Label>
             <asp:Label ID="Label7" runat="server" Text="leeg"></asp:Label>
             <br /><br /><br />
-            <asp:Label ID="Label8" runat="server" Width="180px" Text="Algemeen" Font-Bold="True"></asp:Label>
+            <asp:Label ID="Label8" runat="server" Width="180px" Text="Samenvatting trips" Font-Bold="True"></asp:Label>
             <br /><br />
             <asp:Label ID="Label9" runat="server" Width="100px" Text="Gem. snelheid:"></asp:Label>
             <asp:Label ID="Label10" runat="server" Text="leeg"></asp:Label>

@@ -38,6 +38,11 @@ a:active
     padding: 0px;
 }
 
+.titel2 a, a:visited, a:hover
+{
+    color: #f67027;
+}
+
 .titel2
 {
     color: #f67027;
