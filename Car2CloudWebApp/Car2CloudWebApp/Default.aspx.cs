@@ -29,6 +29,7 @@ namespace ictlab
                 if (Request.QueryString["entityid"] == null )
                 {
                     PnlManager.Visible = true;
+                    welkomstTekst.Text = "Welkom manager in het medewerkersoverzicht van uw medewerkers. Selecteer een medewerker om trip informatie op te vragen.";
                     /* Manager, na het inloggen */
 
                     /* Medewerkers weergeven */
@@ -53,6 +54,7 @@ namespace ictlab
                 {
                     string entity = Request.QueryString["entityid"];
                     PnlTrips.Visible = true;
+                    welkomstTekst.Text = "Selecteer een trip om gegevens op te vragen.";
                     /* Medewerker, na het inloggen */
 
                     /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
@@ -81,8 +83,8 @@ namespace ictlab
             else if (Session["roleid"].ToString() == "2") // Medewerker
             {
                
-
                 PnlTrips.Visible = true;
+                welkomstTekst.Text = "Welkom medewerker bij al uw gereden trips. Selecteer een trip im meer informatie op te vragen.";
                 /* Medewerker, na het inloggen */
 
                 /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
@@ -396,7 +398,10 @@ namespace ictlab
                 if (Convert.ToInt32(r.ItemArray.ElementAt((int)DatasetHelper.CarDataColumn.TripId).ToString()) == tripId)
                 {
                     string number = count.ToString();
-                    chart.Data.Add(new ChartPoint("", Convert.ToInt64(r.ItemArray.ElementAt(6).ToString())));
+                    int point = Convert.ToInt32(r.ItemArray.ElementAt(6).ToString());
+                    point = (point * 3600);
+                    point = (point / 1000);
+                    chart.Data.Add(new ChartPoint("", point));
                     count++;
                 }
             }
@@ -572,9 +577,9 @@ namespace ictlab
 
             /* Gemiddelde snelheid */
             int averageSpeed = GetAverageSpeed(dataSet, userId, tripId);
-            Label5.Text = averageSpeed + " km/uur";
+            Label5.Text = (averageSpeed * 3.6) + " km/uur";
             int averageSpeedAll = GetAverageSpeed(dataSet, userId);
-            Label10.Text = averageSpeedAll + " km/uur";
+            Label10.Text = (averageSpeedAll * 3.6) + " km/uur";
 
             /* linechart */
             LineChart one = newLine(dataSet, "Trip nummer " + tripId, ColorTranslator.FromHtml("#f67027"), 2, userId, tripId);
@@ -588,8 +593,7 @@ namespace ictlab
             String[] Longitude = GetLongitudes(dataSet, userId, tripId);
             js.Text = BuildScript(Latitude, Longitude);
 
-
-
+            welkomstTekst.Text = "Trip is geselecteerd. Klik op een andere trip om deze weer te geven.";
 
 
             //int selectedIndex = Convert.ToInt32(ListBox1.SelectedItem.Text);
