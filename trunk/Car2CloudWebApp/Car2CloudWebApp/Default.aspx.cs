@@ -429,6 +429,28 @@ namespace ictlab
             {
                 String Locations = "";
                 String jScript = "";
+                String Beginpunt = "";
+                String Eindpunt = "";
+
+                Beginpunt += Environment.NewLine + @"
+                    
+                    
+                    var marker0 = new google.maps.Marker({
+                        position: new google.maps.LatLng(" + Latitude[0] + ", " + Longitude[0] + @"),
+                        title: 'Beginpunt',
+                        map: map
+                    });";
+
+                // Eindpunt weergeven
+                Eindpunt += Environment.NewLine + @"
+                    
+                    
+                    var markereinde = new google.maps.Marker({
+                        position: new google.maps.LatLng(" + Latitude[Latitude.Length - 1] + ", " + Longitude[Longitude.Length - 1] + @"),
+                        title: 'Eindpunt',
+                        map: map
+                    });";
+
                 for (int i = 0; i < Latitude.Length; )
                 {
                     // JavaScript maken voor de overlay             
@@ -445,7 +467,7 @@ namespace ictlab
                 // Het complete JavaScript maken
                 jScript = @"<script type='text/javascript'>
 
-                                var poly;
+                                var route;
                                 var map;
 
                                 function initialize() {
@@ -457,18 +479,20 @@ namespace ictlab
                                     };
 
                                     map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-
+                               
                                     var polyOptions = {
-                                        strokeColor: 'blue',
-                                        strokeOpacity: 0.5,
-                                        strokeWeight: 3
+                                        strokeColor: '#FF0000',
+                                        strokeOpacity: 1.0,
+                                        strokeWeight: 5,
+                                        numLevel: 3
                                     }
-                                    poly = new google.maps.Polyline(polyOptions);
-                                    poly.setMap(map);
 
-                                    var path = poly.getPath();
-
-                                    " + Locations + @"
+                                    route = new google.maps.Polyline(polyOptions);
+                                    route.setMap(map);
+                                    var path = route.getPath();
+                                    
+                                    " + Beginpunt + Locations + Eindpunt + @"
+                                    
                                 }
                     </script>";
                 return jScript;
