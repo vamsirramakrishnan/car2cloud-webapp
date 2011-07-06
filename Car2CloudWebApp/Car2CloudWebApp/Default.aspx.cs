@@ -29,6 +29,7 @@ namespace ictlab
                 if (Request.QueryString["entityid"] == null )
                 {
                     PnlManager.Visible = true;
+                    paginaTitel.Text = "Medewerkers overzicht";
                     welkomstTekst.Text = "Welkom manager in het medewerkersoverzicht van uw medewerkers. Selecteer een medewerker om trip informatie op te vragen.";
                     /* Manager, na het inloggen */
 
@@ -55,6 +56,8 @@ namespace ictlab
                     string entity = Request.QueryString["entityid"];
                     PnlTrips.Visible = true;
                     welkomstTekst.Text = "Selecteer een trip om gegevens op te vragen.";
+                    paginaTitel.Text = "Trip overzicht";
+                    PnlSubMenu.Visible = true;
                     /* Medewerker, na het inloggen */
 
                     /* dataSet ophalen uit de app engine (nog veranderen naar data van 1 user) */
@@ -84,6 +87,7 @@ namespace ictlab
             {
                
                 PnlTrips.Visible = true;
+                paginaTitel.Text = "Trip overzicht";
                 welkomstTekst.Text = "Welkom medewerker bij al uw gereden trips. Selecteer een trip im meer informatie op te vragen.";
                 /* Medewerker, na het inloggen */
 

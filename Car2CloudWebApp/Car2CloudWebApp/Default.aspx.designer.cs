@@ -22,6 +22,24 @@ namespace ictlab {
         protected global::System.Web.UI.WebControls.Literal js;
         
         /// <summary>
+        /// paginaTitel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label paginaTitel;
+        
+        /// <summary>
+        /// PnlSubMenu control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel PnlSubMenu;
+        
+        /// <summary>
         /// welkomstTekst control.
         /// </summary>
         /// <remarks>

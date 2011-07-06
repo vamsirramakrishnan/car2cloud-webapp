@@ -24,8 +24,17 @@
     <a href="Uitloggen.aspx">Uitloggen</a>
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
-    <div class="titel2"><a href="Default.aspx">Overzicht</a></div>
+    <div class="titel2">
+        <a href="Default.aspx"><asp:Label ID="paginaTitel" runat="server" Text=""></asp:Label></a>
+    </div>
     <img id="line" src="Images/loginLine.gif" width="870" height="2" alt="line" />
+    <asp:Panel ID="PnlSubMenu" runat="server" Visible="false">
+    <div id="subMenu">
+        <ul>
+            <li><a href="Default.aspx">Medewerkers overzicht</a></li>
+        </ul>
+    </div>
+    </asp:Panel>
     <p class="ptext">
         <asp:Label ID="welkomstTekst" runat="server" Text="Label"></asp:Label>
      </p>
