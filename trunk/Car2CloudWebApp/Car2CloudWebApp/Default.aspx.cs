@@ -505,7 +505,59 @@ namespace ictlab
             }
         }
 
+        /*
+         * GoogleMaps implementatie
+         * @author: Richard
+         */
+        private static String BuildScriptPolyLines(String[] Latitude, String[] Longitude)
+        {
+            try
+            {
+                String jScript = "";
+                String locations = "";
 
+                for (int i = 0; i < Latitude.Length; i++ )
+                {
+
+                    locations += Environment.NewLine + @"new google.maps.LatLng(" + Latitude[i] + ", " + Longitude[i] + @"),";
+                }
+
+                // Het complete JavaScript maken
+                jScript = @"<script type='text/javascript'>
+
+                                function initialize() {
+                                    var myLatLng = new google.maps.LatLng(51.844552160000006, 4.630125760999988);
+                                    var myOptions = {
+                                        zoom: 12,
+                                        center: myLatLng,
+                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                    };
+
+                                    var map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+                               
+                                    var flightPlanCoordinates = [" + locations + @"];
+
+                                    var flightPath = new google.maps.Polyline({
+                                        path: flightPlanCoordinates,
+                                        strokeColor: '#FF0000',
+                                        strokeOpacity: 0.8,
+                                        strokeWeight: 2
+                                    });
+    
+                                    flightPath.setMap(map); 
+                                    
+                                }
+                    </script>";
+
+                return jScript;
+
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         /* 
          * Latitudes uit de dataSet halen en in array terug geven.
          * @author: Richard
